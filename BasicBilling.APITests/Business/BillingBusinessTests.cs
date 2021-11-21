@@ -34,30 +34,6 @@ namespace BasicBilling.API.Business.Tests
             }
         }
 
-        //[TestMethod()]
-        //public void GetPayBillsTest()
-        //{
-        //    using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
-        //    {
-        //        context.DataGenerator(context);
-        //        var result = new BillingBusiness<DbContextMemory>(context).GetPayBills(new GetPayBillsDto { Service = 1, User = 100 });
-        //        context.Dispose(context);
-        //        Assert.AreEqual(!result.IsOk ? false : (result.IsOk && result.Body.Any()) ? true : false, true);
-        //    }
-        //}
-
-        //[TestMethod()]
-        //public void GetPayBillsErrorTest()
-        //{
-        //    using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
-        //    {
-        //        context.DataGenerator(context);
-        //        var result = new BillingBusiness<DbContextMemory>(context).GetPayBills(new GetPayBillsDto { Service = 50, User = 600 });
-        //        context.Dispose(context);
-        //        Assert.AreEqual(!result.IsOk ? false : (result.IsOk && result.Body.Any()) ? true : false, false);
-        //    }
-        //}
-
         [TestMethod()]
         public void PayBillTest()
         {
