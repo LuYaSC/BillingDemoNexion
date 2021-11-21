@@ -2,59 +2,60 @@
 using BasicBilling.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq;
+using BasicBilling.API.Business.Parameters;
+using BasicBilling.API.Context.Entities;
 
-namespace BasicBilling.API.Business.Tests
+namespace BasicBilling.API.Tests
 {
     [TestClass()]
-    public class BillingBusinessTests
+    public class ServicesParameterTests
     {
         [TestMethod()]
-        public void GetBillsTest()
+        public void CreateServiceTest()
         {
             using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
             {
                 context.DataGenerator(context);
-                var result = new BillingBusiness<DbContextMemory>(context).GetBills(new GetBillsDto { Service = 1, User = 100, State = 1 });
+                var result = new ParameterBusiness<DbContextMemory, BillServiceType>(context).Create(new ParameterDto { Name = "Service Test" });
+                context.Dispose(context);
+                Assert.AreEqual(!result.IsOk ? false : (result.Body == "Success") ? true : false, true);
+            }
+        }
+
+        [TestMethod()]
+        public void UpdateServiceTest()
+        {
+            using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
+            {
+                context.DataGenerator(context);
+                var result = new ParameterBusiness<DbContextMemory, BillServiceType>(context).Update(new ParameterDto { Code = 1, Name = "Service Test Modified" });
+                context.Dispose(context);
+                Assert.AreEqual(!result.IsOk ? false : (result.IsOk && result.Body == "Success") ? true : false, true);
+            }
+        }
+
+        [TestMethod()]
+        public void DeleteServiceTest()
+        {
+            using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
+            {
+                context.DataGenerator(context);
+                var result = new ParameterBusiness<DbContextMemory, BillServiceType>(context).Delete(new ParameterDto { Code = 1, State = true });
+                context.Dispose(context);
+                Assert.AreEqual(!result.IsOk ? false : (result.IsOk && result.Body.Contains("Success")) ? true : false, true);
+            }
+        }
+
+        [TestMethod()]
+        public void GetServicesTest()
+        {
+            using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
+            {
+                context.DataGenerator(context);
+                var result = new ParameterBusiness<DbContextMemory, BillServiceType>(context).Get();
                 context.Dispose(context);
                 Assert.AreEqual(!result.IsOk ? false : (result.IsOk && result.Body.Any()) ? true : false, true);
-            }
-        }
-
-        [TestMethod()]
-        public void GetBillsErrorTest()
-        {
-            using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
-            {
-                context.DataGenerator(context);
-                var result = new BillingBusiness<DbContextMemory>(context).GetBills(new GetBillsDto { Service = 6, User = 100, State = 1 });
-                context.Dispose(context);
-                Assert.AreEqual(!result.IsOk ? false : (result.IsOk && result.Body.Any()) ? true : false, false);
-            }
-        }
-
-        [TestMethod()]
-        public void PayBillTest()
-        {
-            using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
-            {
-                context.DataGenerator(context);
-                var result = new BillingBusiness<DbContextMemory>(context).PayBill(new PayBillDto { User = 200, ServiceBill = 2, DateBill = DateTime.Now.ToString("yyyyMM") });
-                context.Dispose(context);
-                Assert.AreEqual(result.IsOk, true);
-            }
-        }
-
-        [TestMethod()]
-        public void PayBillErrorTest()
-        {
-            using (var context = new DbContextMemory(new DbContextOptionsBuilder<DbContextMemory>().UseInMemoryDatabase(databaseName: "BDBills").Options))
-            {
-                context.DataGenerator(context);
-                var result = new BillingBusiness<DbContextMemory>(context).PayBill(new PayBillDto { User = 600, ServiceBill = 20, DateBill = DateTime.Now.ToString("yyyyMM") });
-                context.Dispose(context);
-                Assert.AreEqual(result.IsOk, false);
             }
         }
     }
