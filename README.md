@@ -106,6 +106,6 @@ Distributed under the MIT License.
 
 Luis Jose Jimenez Peña - [@LuYaSc](https://twitter.com/LuYaSc) - luisjimpe93@gmail.com
 
-Project Link: [https://github.com/LuYaSC/ChipaxChallenge](https://github.com/LuYaSC/ChipaxChallenge)
+Project Link: [https://github.com/LuYaSC/BillingDemoNexion/edit/master/README.md](https://github.com/LuYaSC/BillingDemoNexion/edit/master/README.md)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
