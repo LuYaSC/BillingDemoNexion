@@ -56,6 +56,9 @@ namespace BasicBilling.API.Business
             return list.Any() ? list.Last().Id : 1;
         }
 
+        private List<int> GetIds<ENTITY>()
+        where ENTITY : BaseLogicalDelete => context.Set<ENTITY>().Where(x => !x.IsDeleted).Select(x => x.Id).ToList();
+
         private (bool isValid, string errors) ValidationModel<MODEL, VALIDATOR>(MODEL model, VALIDATOR validator)
             where MODEL : class
             where VALIDATOR : AbstractValidator<MODEL>
@@ -74,17 +77,26 @@ namespace BasicBilling.API.Business
             return (res, string.Join(",", errors.ToArray()));
         }
 
+        private int PickRandom(List<int> source)
+        {
+            Random rnd = new Random();
+            int randIndex = rnd.Next(source.Count);
+            int random = source[randIndex];
+            return random;
+        }
+
         public Result<string> CreateBill(CreateBillDto dto)
         {
-            var lastIdCu = GetLastId<BillCurrency>();
-            var lastIdSe = GetLastId<BillServiceType>();
+            var listCurrencies = GetIds<BillCurrency>();
+            var listServices = GetIds<BillServiceType>();
+            Random rnd = new Random();
             for (int i = 0; i < dto.Number; i++)
             {
                 context.Add(new Bill
                 {
                     UserId = dto.User,
-                    ServiceTypeId = dto.Service == 0 ? new Random().Next(1, lastIdSe) : dto.Service,
-                    CurrencyId = dto.Currency == 0 ? new Random().Next(1, lastIdCu) : dto.Currency,
+                    ServiceTypeId = dto.Service == 0 ? PickRandom(listServices) : dto.Service,
+                    CurrencyId = dto.Currency == 0 ? PickRandom(listCurrencies) : dto.Currency,
                     DateCreation = Next(),
                     StateId = 1,
                     Amount = new Random().Next(1, 1000)
